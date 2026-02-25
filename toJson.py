@@ -85,6 +85,11 @@ if __name__ == '__main__':
         with open(file, 'rt', encoding='utf-8-sig', errors='backslashreplace') as f:
             mil_long.extend(csv.reader(f, delimiter=',', quotechar='|'))
 
+    overrides = []
+    for file in glob.glob("./overrides/content/*.csv"):
+        with open(file, 'rt', encoding='utf-8-sig', errors='backslashreplace') as f:
+            overrides.extend(csv.reader(f, delimiter=',', quotechar='|'))
+
     with open(sys.argv[1], 'rt', encoding='utf-8', errors='backslashreplace') as jsonFile:
         text = jsonFile.read()
         with open('decodedJSON', 'wt', encoding='utf-8') as out:
@@ -204,6 +209,25 @@ if __name__ == '__main__':
         entry = noblocks.get(icao)
         if entry and entry.get('t') == tc and entry.get('r') == reg:
             entry['d'] = longtype
+
+    for row in overrides:
+        if len(row) < 5:
+            print(row)
+            continue
+
+        icao = row[0]
+        reg = row[1]
+        tc = row[2]
+        flags = row[3]
+        longtype = row[4]
+
+        entry = noblocks.setdefault(icao, {})
+        entry.setdefault('f', '0000')
+        
+        if reg: entry['r'] = reg
+        if tc:  entry['t'] = tc
+        if flags: entry['f'] = flags
+        if longtype: entry['d'] = longtype
 
     with open('aircraft.csv', 'w', newline='', encoding='utf-8') as csvfile:
         spamwriter = csv.writer(csvfile,
