@@ -12,6 +12,7 @@ function getGIT() {
 }
 
 getGIT https://github.com/adsbfi/type-longnames.git main "$(pwd)/longnames"
+getGIT https://github.com/adsbfi/db-overrides.git main "$(pwd)/overrides"
 
 wget -O newTypes.json --compression=auto https://raw.githubusercontent.com/Mictronics/readsb-protobuf/dev/webapp/src/db/types.json
 wget -O mic-db.zip https://www.mictronics.de/aircraft-database/indexedDB_old.php
